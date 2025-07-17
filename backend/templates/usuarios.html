@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usuarios</title>
+    <link href="/static/style.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f6f9;
+            font-family: sans-serif;
+        }
+
+        .contenedor {
+            max-width: 600px;
+            margin: 60px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .boton-panel {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px 10px;
+            min-width: 200px;
+        }
+
+        .boton-panel:hover {
+            background-color: #1f618d;
+        }
+
+        .boton-rojo {
+            background-color: #c0392b;
+        }
+
+        .boton-rojo:hover {
+            background-color: #922b21;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Gestión de Usuarios</h2>
+
+        <a href="/crear_usuario"><button class="boton-panel">Crear Nuevo Usuario</button></a>
+        <a href="/tabla_usuarios"><button class="boton-panel">Ver Tabla de Usuarios</button></a>
+
+        <br><br>
+
+        <a href="/admin"><button class="boton-panel">Volver</button></a>
+        <a href="/logout"><button class="boton-panel boton-rojo">Cerrar sesión</button></a>
+    </div>
+</body>
+</html>

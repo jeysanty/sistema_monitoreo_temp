@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alertas Históricas</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .alerta {
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+        }
+        .rojo { background-color: #e74c3c; }
+        .celeste { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📜 Alertas Históricas</h2>
+
+        {% for alerta in alertas %}
+            <div class="alerta {{ alerta.color }}">{{ alerta.mensaje }}</div>
+        {% else %}
+            <p>No hay alertas registradas.</p>
+        {% endfor %}
+
+        <br>
+        <a href="/admin"><button>🔙 Volver al panel admin</button></a>
+    </div>
+</body>
+</html>

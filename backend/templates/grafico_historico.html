@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfico Histórico</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .btn-volver {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-volver:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="/admin" class="btn-volver">⬅ Volver</a>
+    </div>
+
+    <div class="container">
+        <h2>Gráfico de Temperatura Histórica</h2>
+        <canvas id="graficoHistorico"></canvas>
+    </div>
+
+    <script>
+        async function cargarDatos() {
+            const respuesta = await fetch("/admin/datos_historicos_json");
+            const datos = await respuesta.json();
+
+            const labels = datos.map(p => p.timestamp);
+            const valores = datos.map(p => p.valor);
+
+            const ctx = document.getElementById("graficoHistorico").getContext("2d");
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperatura (°C)',
+                        data: valores,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#333'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#666'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#666'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        cargarDatos();
+    </script>
+</body>
+</html>

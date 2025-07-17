@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Usuario</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>
+            Bienvenido,
+            {% if request.session.role == 'admin' %}
+                Administrador (modo monitoreo)
+            {% else %}
+                Usuario
+            {% endif %}
+        </h2>
+
+        <p><strong>Temperatura actual:</strong> <span id="temp-actual">Cargando...</span> °C</p>
+
+        <!-- Formulario para iniciar viaje -->
+        <div id="form-iniciar-viaje" style="display: none; margin-top: 20px;">
+            <form method="post" action="/iniciar_viaje_con_producto">
+                <label for="producto"><strong>Producto transportado:</strong></label>
+                <select name="producto" required style="margin-left: 10px; width: 200px;">
+                    <option value="Frutas">Frutas</option>
+                    <option value="Verduras">Verduras</option>
+                    <option value="Pescados y Mariscos">Pescados y Mariscos</option>
+                    <option value="Carnes">Carnes</option>
+                    <option value="Pollos">Pollos</option>
+                </select>
+                <button type="submit" style="margin-left: 10px;">Iniciar Viaje</button>
+            </form>
+        </div>
+
+        <!-- Formulario para finalizar viaje -->
+        <div id="form-finalizar-viaje" style="display: none; margin-top: 20px;">
+            <form method="post" action="/finalizar_viaje">
+                <button type="submit">Finalizar Viaje</button>
+            </form>
+        </div>
+
+        <!-- Botones para alternar vista -->
+        <div style="margin-top: 30px;">
+            <button onclick="mostrarGrafico()">📊 Ver gráfico</button>
+            <button onclick="mostrarAlertas()">🚨 Ver alertas</button>
+        </div>
+
+        <!-- Sección Gráfico -->
+        <div id="seccion-grafico" style="display: none; margin-top: 30px;">
+            <h3>Gráfico de temperaturas</h3>
+            <canvas id="grafico-temp" width="800" height="300"></canvas>
+        </div>
+
+        <!-- Sección Alertas -->
+        <div id="seccion-alertas" style="display: none; margin-top: 30px;">
+            <h3>Alertas</h3>
+            <div id="lista-alertas"></div>
+        </div>
+
+        <!-- Botón de volver/cerrar sesión -->
+        <div style="margin-top: 40px;">
+            {% if request.session.role == 'admin' %}
+                <a href="/admin"><button>Volver al panel admin</button></a>
+            {% else %}
+                <a href="/logout"><button>Cerrar sesión</button></a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const alertaDiv = document.getElementById("seccion-alertas");
+        const graficoDiv = document.getElementById("seccion-grafico");
+
+        function mostrarGrafico() {
+            alertaDiv.style.display = "none";
+            graficoDiv.style.display = "block";
+        }
+
+        function mostrarAlertas() {
+            graficoDiv.style.display = "none";
+            alertaDiv.style.display = "block";
+        }
+
+        async function obtenerTemperaturaActual() {
+            try {
+                const res = await fetch("/temperatura_actual");
+                const data = await res.json();
+                document.getElementById("temp-actual").textContent = data.valor?.toFixed(1) ?? "N/A";
+            } catch (error) {
+                document.getElementById("temp-actual").textContent = "Error";
+            }
+        }
+
+        async function actualizarBotonViaje() {
+            const res = await fetch("/viaje_activo");
+            const data = await res.json();
+            document.getElementById("form-iniciar-viaje").style.display = data.activo ? "none" : "block";
+            document.getElementById("form-finalizar-viaje").style.display = data.activo ? "block" : "none";
+        }
+
+        async function actualizarGrafico() {
+            const res = await fetch("/datos_viaje_actual");
+            const data = await res.json();
+            const labels = data.map(p => new Date(p.timestamp).toLocaleTimeString());
+            const valores = data.map(p => p.valor);
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = valores;
+            chart.update();
+        }
+
+        async function cargarAlertas() {
+            const res = await fetch("/alertas");
+            const data = await res.json();
+            const contenedor = document.getElementById("lista-alertas");
+            contenedor.innerHTML = "";
+            data.reverse().forEach(alerta => {
+                const div = document.createElement("div");
+                div.classList.add("alerta", alerta.color || "rojo");
+                div.textContent = alerta.mensaje;
+                contenedor.appendChild(div);
+            });
+        }
+
+        const ctx = document.getElementById('grafico-temp').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperatura (°C)',
+                    borderColor: 'blue',
+                    backgroundColor: 'lightblue',
+                    fill: true,
+                    data: [],
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        suggestedMin: -5,
+                        suggestedMax: 15
+                    }
+                }
+            }
+        });
+
+        obtenerTemperaturaActual();
+        actualizarBotonViaje();
+        actualizarGrafico();
+        cargarAlertas();
+
+        setInterval(() => {
+            obtenerTemperaturaActual();
+            actualizarGrafico();
+            cargarAlertas();
+        }, 5000);
+    </script>
+</body>
+</html>

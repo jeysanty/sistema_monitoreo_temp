@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usuarios</title>
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Tabla de Usuarios</h2>
+        <table class="table-style">
+            <tr>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+            {% for username, datos in usuarios.items() %}
+                <tr>
+                    <td>{{ username }}</td>
+                    <td>{{ datos.role }}</td>
+                    <td>
+                        {% if username != "admin" %}
+                        <form method="post" action="/eliminar_usuario" style="display:inline;">
+                            <input type="hidden" name="username" value="{{ username }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                        {% else %}
+                            No permitido
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <a href="/usuarios"><button>Volver</button></a>
+        <a href="/logout"><button>Cerrar sesión</button></a>
+    </div>
+</body>
+</html>

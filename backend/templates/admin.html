@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrador</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        .boton-panel {
+            display: block;
+            width: 250px;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+        .boton-panel:hover {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body style="background-color: #f3f6f9; font-family: sans-serif;">
+    <div style="max-width: 900px; margin: 60px auto; background-color: white; padding: 40px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: flex-start; gap: 30px;">
+
+        <!-- Panel izquierdo -->
+        <div style="flex: 1;">
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">Bienvenido, Administrador</h2>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="/admin/historico_temperaturas"><button class="boton-panel">📈 Gráfico Histórico</button></a>
+                <a href="/admin/alertas_historicas"><button class="boton-panel">🚨 Alertas Históricas</button></a>
+                <a href="/admin/reportes"><button class="boton-panel">🗂 Historial de Reportes</button></a>
+                <a href="/usuarios"><button class="boton-panel">🎥 Usuarios</button></a>
+                <a href="/admin/viaje_actual"><button class="boton-panel">🚚 Viaje Actual</button></a>
+                <a href="/logout"><button class="boton-panel" style="background-color: #c0392b;">⛔ Cerrar sesión</button></a>
+            </div>
+        </div>
+
+        <!-- Panel derecho (logo) -->
+        <div style="flex: 1; display: flex; justify-content: center;">
+            <img src="/static/utec.jpg" alt="Logo UTEC" style="max-width: 300px; height: auto;">
+        </div>
+
+    </div>
+</body>
+
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Reportes</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        a.descargar {
+            color: #2980b9;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a.descargar:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🗂 Historial de Reportes PDF</h2>
+
+        {% if reportes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha de creación</th>
+                    <th>Producto</th>
+                    <th>Usuario</th>
+                    <th>Reporte</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reporte in reportes %}
+                    <tr>
+                        <td>{{ reporte.fecha }}</td>
+                        <td>{{ reporte.producto }}</td>
+                        <td>{{ reporte.usuario }}</td>
+                        <td><a class="descargar" href="{{ reporte.url }}" target="_blank">📥 Descargar</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No se encontraron reportes generados.</p>
+        {% endif %}
+
+        <br>
+        <a href="/admin"><button>🔙 Volver al panel admin</button></a>
+    </div>
+</body>
+</html>
